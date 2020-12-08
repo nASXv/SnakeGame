@@ -154,13 +154,16 @@ namespace SnakeLibrary {
 
     public class ControllerGameplay {
         int[] length = new int[2];
-        Position position = new Position();
+        Position position, oldPosition;
+        Position[] bodyPositions;
         Random random = new Random();
+        
         int gameSpeed = 1000, apples = 0;
-        bool isAlive = true;
-        string direction = "down";
+        bool isAlive = true, increaseSize = false;
+        string direction = "up";
         public int mapSize = 16;
         public Cell[,] cells;
+
 
 
         void Die() {
@@ -178,14 +181,27 @@ namespace SnakeLibrary {
         }
 
         void Collect() {
-            apples += 1;
+            apples ++;
             cells[position.x, position.y].type = Cell.Type.empty;
+
+            SpawnApple();
+            IncreaseSize();
+        }
+
+        void IncreaseSize() {
+            Position[] oldBody = bodyPositions;
+            bodyPositions = new Position[oldBody.Length + 1];
+
+            for (int i = 0; i < oldBody.Length; i++)
+                bodyPositions[i] = oldBody[i];
+            bodyPositions[bodyPositions.Length - 1].Equals(oldPosition);
         }
 
         void SpawnSnake() {
             isAlive = true;
-            position.x = random.Next(0, mapSize-1);
-            position.y = random.Next(0, mapSize-1);
+            position = new Position(random.Next(0, mapSize - 1), random.Next(0, mapSize - 1));
+            bodyPositions = new Position[1];
+            bodyPositions[0] = position;
         }
 
         public void Update() {
@@ -196,6 +212,11 @@ namespace SnakeLibrary {
         }
 
         void CheckObstacle() {
+            if (position.x == 1 && direction == "left") position = new Position(mapSize - 1, position.y);
+            if (position.x == mapSize - 1 && direction == "right") position = new Position(1, position.y);
+            if (position.y == 1 && direction == "up") position = new Position(position.x, 1);
+            if (position.y == mapSize - 1 && direction == "up") position = new Position(position.x, 1);
+
             Cell cell = cells[position.x, position.y];
 
             switch (cell.type) {
@@ -203,16 +224,15 @@ namespace SnakeLibrary {
                 case Cell.Type.apple: Collect(); break;
                 case Cell.Type.snake: Die(); break;
             }
-
-            if (position.x == 1 && direction == "left") position = new Position(mapSize-1, position.y);
-            if (position.x == mapSize-1 && direction == "right") position = new Position(1, position.y);
-            if (position.y == 1 && direction == "up") position = new Position(position.x, mapSize-1);
-            if (position.y == mapSize-1 && direction == "down") position = new Position(position.y, 1);
-
         }
 
         void FillCells() {
-            cells[position.x, position.y].type = Cell.Type.snake;
+            foreach(Cell x in cells) {
+                if (x.type != Cell.Type.apple) x.type = Cell.Type.empty;
+            }
+
+            foreach (Position x in bodyPositions)
+                cells[x.x, x.y].type = Cell.Type.snake;
         }
 
         void Move() {
@@ -226,6 +246,13 @@ namespace SnakeLibrary {
 
             position.x += movement.x;
             position.y += movement.y;
+
+            //move body
+            Position[] oldBody = bodyPositions;
+            bodyPositions[0].Equals(position);
+            for(int i = 1; i < bodyPositions.Length; i++) {
+                bodyPositions[i] = oldBody[i - 1];
+            }
         }
 
         public void Input(string direction) {
@@ -235,12 +262,12 @@ namespace SnakeLibrary {
 
         public void Start() {
             cells = new Cell[mapSize, mapSize];
-            for(int x = 0, y = 0; x < mapSize; x++) {
-                y = 0;
-                while (y < mapSize) {
+            for(int x = 0, y = 0; y < mapSize; y++) {
+                x = 0;
+                while (x < mapSize) {
                     cells[x, y] = new Cell();
 
-                    y++;
+                    x++;
                 }
             }
 
