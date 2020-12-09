@@ -43,15 +43,16 @@ namespace SnakeLibrary {
         public Cell() {
 
         }
-    }
+    }   
 
    
     public class GameController {
         public ControllerGameplay gameplay;
         public ControllerGraphics graphics;
+        public Label debug;
         Canvas canvas;
         private System.Windows.Threading.DispatcherTimer gameTickTimer = new System.Windows.Threading.DispatcherTimer();
-        int gameStep = 25;
+        int gameStep = 12;
 
         void LaunchTimers() {
             gameTickTimer.Tick += UpdateEvents;
@@ -62,11 +63,17 @@ namespace SnakeLibrary {
          void UpdateEvents(object source, EventArgs e) {
             gameplay.Update();
             graphics.Update();
+            if (debug != null) Debug();
         }
 
-        public GameController(Canvas canvas, bool start = false) {
+        void Debug() {
+            debug.Content = "Position: " + gameplay.position.x + "," + gameplay.position.y + "\nApples:  " + gameplay.apples+ "\nSize:  " + gameplay.bodyPositions.Length + "\n "+ 0 + " \n" + 0;
+        }
+
+        public GameController(Canvas canvas, bool start = false, Label debugLabel = null) {
             this.canvas = canvas;
             if (start) Start();
+            debug = debugLabel;
         }
 
         void Start() {
@@ -144,7 +151,7 @@ namespace SnakeLibrary {
                     rect.Height = cellSize;
 
                     canvas.Children.Insert(i, rect);
-                    Canvas.SetBottom(rect, y * cellSize);
+                    Canvas.SetTop(rect, y * cellSize);
                     Canvas.SetLeft(rect, x * cellSize);
 
                     rect.Fill = new SolidColorBrush(Colors.AliceBlue);
@@ -160,13 +167,13 @@ namespace SnakeLibrary {
 
     public class ControllerGameplay {
         int[] length = new int[2];
-        Position position, oldPosition;
-        Position[] bodyPositions;
+        public Position position, oldPosition;
+        public Position[] bodyPositions;
         Random random = new Random();
         
-        int gameSpeed = 1000, apples = 0;
+        public int apples = 0;
         bool isAlive = true, increaseSize = false;
-        public string direction = "up";
+        public string direction = "up", nextDirection = "up";
         public int mapSize = 16;
         public Cell[,] cells;
 
@@ -196,10 +203,10 @@ namespace SnakeLibrary {
         public void KeyPressed(object sender, KeyEventArgs e) {
             string oldDirection = direction;
             switch (e.Key) {
-                case Key.Up: if (direction != "down") direction = "up";  break;
-                case Key.Down: if (direction != "up") direction = "down";  break;
-                case Key.Left:  if (direction != "left") direction = "right"; break;
-                case Key.Right:  if (direction != "right") direction = "left"; break;
+                case Key.Up: if (direction != "down") nextDirection = "up";  break;
+                case Key.Down: if (direction != "up") nextDirection = "down";  break;
+                case Key.Left:  if (direction != "right") nextDirection = "left"; break;
+                case Key.Right:  if (direction != "left") nextDirection = "right"; break;
                 case Key.R: //restart
                     break;
             }
@@ -214,12 +221,13 @@ namespace SnakeLibrary {
 
             for (int i = 0; i < oldBody.Length; i++)
                 bodyPositions[i] = new Position( oldBody[i].x, oldBody[i].y);
-            bodyPositions[bodyPositions.Length - 1] = new Position();
+            bodyPositions[bodyPositions.Length - 1] = new Position(position);
         }
 
         void SpawnSnake() {
             isAlive = true;
             position = new Position(random.Next(0, mapSize - 1), random.Next(0, mapSize - 1));
+
             bodyPositions = new Position[2];
             bodyPositions[0] = position;
             bodyPositions[1] = new Position( bodyPositions[0].x, bodyPositions[0].y + 1);
@@ -227,18 +235,23 @@ namespace SnakeLibrary {
         }
 
         public void Update() {
-            CheckObstacle();
-            Move();
+            if (isAlive) {
+                CheckBorder();
+                Move();
+                CheckObstacle();
+            }
 
             FillCells();
         }
 
-        void CheckObstacle() {
-            if (position.x == 1 && direction == "left") position = new Position(mapSize - 1, position.y);
-            if (position.x == mapSize - 1 && direction == "right") position = new Position(1, position.y);
-            if (position.y == 1 && direction == "up") position = new Position(position.x, 1);
-            if (position.y == mapSize - 1 && direction == "up") position = new Position(position.x, 1);
+        void CheckBorder() {
+            if (position.x == 0 && nextDirection == "left") position = new Position(mapSize, position.y);
+            if (position.x == mapSize - 1 && nextDirection == "right") position = new Position(-1, position.y);
+            if (position.y == 0 && nextDirection == "up") position = new Position(position.x, mapSize);
+            if (position.y == mapSize - 1 && nextDirection == "down") position = new Position(position.x, -1);
+        }
 
+        void CheckObstacle() {
             Cell cell = cells[position.x, position.y];
 
             switch (cell.type) {
@@ -258,12 +271,14 @@ namespace SnakeLibrary {
         }
 
         void Move() {
+            direction = nextDirection;
+
             Position movement = new Position();
             switch (direction) {
-                case "up": movement.y = 1; break;
-                case "down": movement.y = -1; break;
-                case "left": movement.x = 1; break;
-                case "right": movement.x = -1; break;
+                case "up": movement.y = -1; break;
+                case "down": movement.y = 1; break;
+                case "left": movement.x = -1; break;
+                case "right": movement.x = 1; break;
             }
             Position[] oldBody = new Position[bodyPositions.Length];
             for (int i = 0; i < oldBody.Length; i++) {
@@ -280,11 +295,6 @@ namespace SnakeLibrary {
                 bodyPositions[i] = oldBody[i-1];
             }
         }
-
-        public void Input(string direction) {
-            this.direction = direction;
-        }
-
 
         public void Start() {
             cells = new Cell[mapSize, mapSize];

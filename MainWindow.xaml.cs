@@ -21,10 +21,18 @@ namespace snakespace {
         public MainWindow() {
             InitializeComponent();
         }
+
+        void NewGame() {
+            Clear();
+            gameController = new GameController(GameCanvas, true, Text_Length);
+        }
+
+        void Clear() {
+            GameCanvas.Children.Clear();
+        }
         
         private void Button_Click(object sender, RoutedEventArgs e) {
-
-            gameController = new GameController(GameCanvas, true);
+            NewGame();
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e) {
