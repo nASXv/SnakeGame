@@ -24,6 +24,10 @@ namespace SnakeLibrary {
             this.x = x;
             this.y = y;
         }
+        public Position(Position pos) {
+            this.x = pos.x;
+            this.y = pos.y;
+        }
         public bool Equals(Position pos) {
             return (pos.x == x && pos.y == y);
         }
@@ -40,6 +44,40 @@ namespace SnakeLibrary {
 
         }
     }
+
+   
+    public class GameController {
+        public ControllerGameplay gameplay;
+        public ControllerGraphics graphics;
+        Canvas canvas;
+        private System.Windows.Threading.DispatcherTimer gameTickTimer = new System.Windows.Threading.DispatcherTimer();
+        int gameStep = 25;
+
+        void LaunchTimers() {
+            gameTickTimer.Tick += UpdateEvents;
+            gameTickTimer.Interval = new TimeSpan(gameStep * 100000);
+            gameTickTimer.Start();
+        }
+
+         void UpdateEvents(object source, EventArgs e) {
+            gameplay.Update();
+            graphics.Update();
+        }
+
+        public GameController(Canvas canvas, bool start = false) {
+            this.canvas = canvas;
+            if (start) Start();
+        }
+
+        void Start() {
+            gameplay = new ControllerGameplay(true);
+            graphics = new ControllerGraphics(gameplay, canvas);
+
+            LaunchTimers();
+            //gameplay.Start();
+        }
+    }
+
 
     public class ControllerGraphics {
         ControllerGameplay gameplay;
@@ -66,9 +104,9 @@ namespace SnakeLibrary {
         public void Update() {
             UpdateMap();
         }
-        
+
         void UpdateMap() {
-            for (int x = 0, y = 0, i= 0; y < gameplay.mapSize; y++) {
+            for (int x = 0, y = 0, i = 0; y < gameplay.mapSize; y++) {
                 x = 0;
                 Color color = Colors.White;
 
@@ -81,7 +119,7 @@ namespace SnakeLibrary {
                         case Cell.Type.snake: color = Snake; break;
                         default: color = Colors.Black; break;
                     }
-                    
+
                     rect.Fill = new SolidColorBrush(color);
 
                     x++;
@@ -98,15 +136,15 @@ namespace SnakeLibrary {
             for (int x = 0, y = 0, i = 0; y < mapSize; y++) {
                 x = 0;
                 while (x < mapSize) {
-                   // Rectangle rect = rects[i];
+                    // Rectangle rect = rects[i];
                     Rectangle rect = new Rectangle();
                     rects[i] = rect;
-                    
+
                     rect.Width = cellSize;
                     rect.Height = cellSize;
 
                     canvas.Children.Insert(i, rect);
-                    Canvas.SetTop(rect, y * cellSize);
+                    Canvas.SetBottom(rect, y * cellSize);
                     Canvas.SetLeft(rect, x * cellSize);
 
                     rect.Fill = new SolidColorBrush(Colors.AliceBlue);
@@ -120,38 +158,6 @@ namespace SnakeLibrary {
         }
     }
 
-    public class GameController {
-        ControllerGameplay gameplay;
-        ControllerGraphics graphics;
-        Canvas canvas;
-        private System.Windows.Threading.DispatcherTimer gameTickTimer = new System.Windows.Threading.DispatcherTimer();
-        int gameStep = 5;
-
-        void LaunchTimers() {
-            gameTickTimer.Tick += UpdateEvents;
-            gameTickTimer.Interval = new TimeSpan(gameStep * 1000000);
-            gameTickTimer.Start();
-        }
-
-         void UpdateEvents(object source, EventArgs e) {
-            gameplay.Update();
-            graphics.Update();
-        }
-
-        public GameController(Canvas canvas, bool start = false) {
-            this.canvas = canvas;
-            if (start) Start();
-        }
-
-        void Start() {
-            gameplay = new ControllerGameplay(true);
-            graphics = new ControllerGraphics(gameplay, canvas);
-
-            LaunchTimers();
-            //gameplay.Start();
-        }
-    }
-
     public class ControllerGameplay {
         int[] length = new int[2];
         Position position, oldPosition;
@@ -160,10 +166,9 @@ namespace SnakeLibrary {
         
         int gameSpeed = 1000, apples = 0;
         bool isAlive = true, increaseSize = false;
-        string direction = "up";
+        public string direction = "up";
         public int mapSize = 16;
         public Cell[,] cells;
-
 
 
         void Die() {
@@ -188,25 +193,42 @@ namespace SnakeLibrary {
             IncreaseSize();
         }
 
+        public void KeyPressed(object sender, KeyEventArgs e) {
+            string oldDirection = direction;
+            switch (e.Key) {
+                case Key.Up: if (direction != "down") direction = "up";  break;
+                case Key.Down: if (direction != "up") direction = "down";  break;
+                case Key.Left:  if (direction != "left") direction = "right"; break;
+                case Key.Right:  if (direction != "right") direction = "left"; break;
+                case Key.R: //restart
+                    break;
+            }
+        }
+
         void IncreaseSize() {
-            Position[] oldBody = bodyPositions;
-            bodyPositions = new Position[oldBody.Length + 1];
+            Position[] oldBody = new Position[bodyPositions.Length];
+            for (int i = 0; i < oldBody.Length; i++)
+                oldBody[i] = new Position(bodyPositions[i]);
+
+            bodyPositions = new Position[bodyPositions.Length + 1];
 
             for (int i = 0; i < oldBody.Length; i++)
-                bodyPositions[i] = oldBody[i];
-            bodyPositions[bodyPositions.Length - 1].Equals(oldPosition);
+                bodyPositions[i] = new Position( oldBody[i].x, oldBody[i].y);
+            bodyPositions[bodyPositions.Length - 1] = new Position();
         }
 
         void SpawnSnake() {
             isAlive = true;
             position = new Position(random.Next(0, mapSize - 1), random.Next(0, mapSize - 1));
-            bodyPositions = new Position[1];
+            bodyPositions = new Position[2];
             bodyPositions[0] = position;
+            bodyPositions[1] = new Position( bodyPositions[0].x, bodyPositions[0].y + 1);
+            //bodyPositions[2] = new Position();
         }
 
         public void Update() {
-            Move();
             CheckObstacle();
+            Move();
 
             FillCells();
         }
@@ -243,15 +265,19 @@ namespace SnakeLibrary {
                 case "left": movement.x = 1; break;
                 case "right": movement.x = -1; break;
             }
+            Position[] oldBody = new Position[bodyPositions.Length];
+            for (int i = 0; i < oldBody.Length; i++) {
+                oldBody[i] = new Position(bodyPositions[i].x, bodyPositions[i].y);
+            }
 
             position.x += movement.x;
             position.y += movement.y;
 
+            bodyPositions[0] = position;
+
             //move body
-            Position[] oldBody = bodyPositions;
-            bodyPositions[0].Equals(position);
-            for(int i = 1; i < bodyPositions.Length; i++) {
-                bodyPositions[i] = oldBody[i - 1];
+            for (int i = 1; i < bodyPositions.Length; i++) {
+                bodyPositions[i] = oldBody[i-1];
             }
         }
 

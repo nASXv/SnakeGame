@@ -17,17 +17,19 @@ using SnakeLibrary;
 
 namespace snakespace {
     public partial class MainWindow : Window {
+        GameController gameController;
         public MainWindow() {
             InitializeComponent();
         }
         
         private void Button_Click(object sender, RoutedEventArgs e) {
-            
 
-            GameController gameController = new GameController(GameCanvas, true);
+            gameController = new GameController(GameCanvas, true);
         }
 
-        
+        private void Window_KeyUp(object sender, KeyEventArgs e) {
+            gameController.gameplay.KeyPressed(sender, e);
+        }
     }
 
     
