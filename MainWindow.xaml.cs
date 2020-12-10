@@ -24,10 +24,11 @@ namespace snakespace {
 
         void NewGame() {
             Clear();
-            gameController = new GameController(GameCanvas, true, Text_Length);
+            gameController = new GameController(GameCanvas, true, Text_Length, img_GameOver);
         }
 
         void Clear() {
+            img_GameOver.Opacity = 0;
             GameCanvas.Children.Clear();
         }
         

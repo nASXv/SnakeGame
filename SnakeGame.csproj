@@ -102,6 +102,16 @@
     <Resource Include="Resources\sprite_SnakeBody.png" />
     <Resource Include="Resources\sprite_SnakeEnd.png" />
     <Resource Include="Resources\sprite_SnakeHead.png" />
+    <Resource Include="Resources\sprite_3.png" />
+    <Resource Include="Resources\sprite_4.png" />
+    <Resource Include="Resources\Background.png" />
+    <Resource Include="Resources\sprite_1.png" />
+    <Resource Include="Resources\sprite_0.png" />
+    <Resource Include="Resources\GAME OVER.png" />
+    <Resource Include="Resources\sprite_2.png" />
+    <Resource Include="Resources\sprite_empty.png" />
+    <Resource Include="Resources\Restart.png" />
+    <Resource Include="Resources\Play.png" />
     <Content Include="Resources\sprite_SnakeHead.psd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

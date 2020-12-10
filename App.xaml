@@ -4,6 +4,16 @@
              xmlns:local="clr-namespace:snakespace"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <BitmapImage x:Key="BG" UriSource="pack://application:,,/Resources/Background.png"></BitmapImage>
+            <BitmapImage x:Key="img_Play" UriSource="pack://application:,,/Resources/Play.png"></BitmapImage>
+            <BitmapImage x:Key="img_Restart" UriSource="pack://application:,,/Resources/Restart.png"></BitmapImage>
+            <BitmapImage x:Key="img_GameOver" UriSource="pack://application:,,/Resources/Game Over.png"></BitmapImage>
+            <BitmapImage x:Key="img_Head" UriSource="pack://application:,,/Resources/Head.png"></BitmapImage>
+            <BitmapImage x:Key="img_Body" UriSource="pack://application:,,/Resources/Body.png"></BitmapImage>
+            <BitmapImage x:Key="img_BodyAngle" UriSource="pack://application:,,/Resources/Angle.png"></BitmapImage>
+            <BitmapImage x:Key="img_BodyEnd" UriSource="pack://application:,,/Resources/End.png"></BitmapImage>
+            <BitmapImage x:Key="img_Apple" UriSource="pack://application:,,/Resources/Apple.png"></BitmapImage>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

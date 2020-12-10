@@ -5,11 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:snakespace"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="659"
-        KeyUp = "Window_KeyUp">
+        Title="MainWindow" Height="647" Width="459"
+        KeyUp = "Window_KeyUp"
+        Background="White">
+
     <Grid>
-        <Button Content="Butt" HorizontalAlignment="Left" Margin="435,355,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Canvas HorizontalAlignment="Left" Height="350" Margin="10,10,0,0" VerticalAlignment="Top" Width="350" Name="GameCanvas"/>
-        <Label Content="Lentgth: " HorizontalAlignment="Left" Margin="373,23,0,0" VerticalAlignment="Top" Name ="Text_Length"/>
+        <Button Width="100" Height="100" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="30,30,30,30" Click="Button_Click">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{StaticResource img_Restart}" Stretch="Fill"/>
+
+            </StackPanel>
+        </Button>
+        
+        <Image Height="400" Width="400" Source="{StaticResource BG}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="26,25,25,0" />
+        <Image Height="300" Width="300" Source="{StaticResource img_GameOver}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="26,200,25,0" Name="img_GameOver" />
+        
+        <Canvas HorizontalAlignment="Center" Height="400" VerticalAlignment="Top" Width="400" Name="GameCanvas" Margin="26,25,25,0">
+        </Canvas>
+        <Label Content="Lentgth: " HorizontalAlignment="Left" Margin="45,486,0,0" VerticalAlignment="Top" Name ="Text_Length"/>
     </Grid>
 </Window>

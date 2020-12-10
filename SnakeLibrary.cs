@@ -52,7 +52,8 @@ namespace SnakeLibrary {
         public Label debug;
         Canvas canvas;
         private System.Windows.Threading.DispatcherTimer gameTickTimer = new System.Windows.Threading.DispatcherTimer();
-        int gameStep = 12;
+        int gameStep = 10;
+        Image img_go;
 
         void LaunchTimers() {
             gameTickTimer.Tick += UpdateEvents;
@@ -64,16 +65,24 @@ namespace SnakeLibrary {
             gameplay.Update();
             graphics.Update();
             if (debug != null) Debug();
+
+            if (!gameplay.isAlive) GameOver();
         }
 
         void Debug() {
             debug.Content = "Position: " + gameplay.position.x + "," + gameplay.position.y + "\nApples:  " + gameplay.apples+ "\nSize:  " + gameplay.bodyPositions.Length + "\n "+ 0 + " \n" + 0;
         }
 
-        public GameController(Canvas canvas, bool start = false, Label debugLabel = null) {
+        public GameController(Canvas canvas, bool start = false, Label debugLabel = null, Image GameOver = null) {
             this.canvas = canvas;
             if (start) Start();
             debug = debugLabel;
+            img_go = GameOver;
+        }
+
+        void GameOver() {
+            gameTickTimer.Stop();
+            img_go.Opacity = 1;
         }
 
         void Start() {
@@ -89,13 +98,29 @@ namespace SnakeLibrary {
     public class ControllerGraphics {
         ControllerGameplay gameplay;
         Rectangle[] rects;
+        Image[] images;
         Canvas canvas;
 
-        Color Empty = Colors.Black;
+        Color Empty = Colors.Transparent;
         Color Snake = Colors.Green;
         Color Apple = Colors.Red;
 
-        int cellSize = 20;
+        BitmapImage[] sprites; // 0 - bodyend, 1 - body, 2 - head, 3 - angle, 4 - apple 
+        BitmapImage empty; 
+        void SetSprites() {
+            sprites = new BitmapImage[5];
+            for(int i = 0; i < sprites.Length; i++) {
+                sprites[i] = new BitmapImage();
+                sprites[i].BeginInit();
+                sprites[i].UriSource = new Uri("pack://application:,,/Resources/sprite_" + i + ".png");
+                sprites[i].EndInit();
+            }
+
+            empty = new BitmapImage();
+            empty.BeginInit(); empty.UriSource = new Uri("pack://application:,,/Resources/sprite_empty.png"); empty.EndInit();
+        }
+
+        int cellSize = 25;
 
         public ControllerGraphics(ControllerGameplay gameplay, Canvas canvas) {
             this.gameplay = gameplay;
@@ -105,6 +130,7 @@ namespace SnakeLibrary {
         }
 
         void Start() {
+            SetSprites();
             CreateMap();
         }
 
@@ -115,46 +141,88 @@ namespace SnakeLibrary {
         void UpdateMap() {
             for (int x = 0, y = 0, i = 0; y < gameplay.mapSize; y++) {
                 x = 0;
-                Color color = Colors.White;
+                BitmapImage src = new BitmapImage();
 
                 while (x < gameplay.mapSize) {
 
-                    Rectangle rect = rects[i];
+                    //Rectangle rect = rects[i];
+                    Image img = images[i];
                     switch (gameplay.cells[x, y].type) {
-                        case Cell.Type.apple: color = Apple; break;
-                        case Cell.Type.empty: color = Empty; break;
-                        case Cell.Type.snake: color = Snake; break;
-                        default: color = Colors.Black; break;
+                        case Cell.Type.apple: src = sprites[4]; break;
+                        case Cell.Type.empty: src = empty; break;
+                        case Cell.Type.snake: src = empty; break;
                     }
-
-                    rect.Fill = new SolidColorBrush(color);
+                    
+                    img.Source = src;
 
                     x++;
                     i++;
-                    //Thread.Sleep(100);
                 }
+            }
+            SetSnakeSprites();
+        }
+
+        void SetSnakeSprites() {
+            int length = gameplay.bodyPositions.Length;
+            for (int i = 0; i < length; i++) {
+                Position pos = gameplay.bodyPositions[i];
+
+                Image img = images[pos.x + pos.y * gameplay.mapSize];
+                BitmapImage src = new BitmapImage();
+
+                src.BeginInit();
+
+                if (i == 0) src.UriSource = sprites[2].UriSource;
+                else if (i == length - 1) src.UriSource = sprites[0].UriSource;
+                else src.UriSource = sprites[1].UriSource;
+
+                if (i == 0) {
+                    switch (gameplay.direction) {
+                        case "up": src.Rotation = Rotation.Rotate270; break;
+                        case "down": src.Rotation = Rotation.Rotate90; break;
+                        case "left": src.Rotation = Rotation.Rotate180; break;
+                    }
+                }
+                else if (i == length -1) {
+                    Position next = gameplay.bodyPositions[i - 1], current = gameplay.bodyPositions[i];
+
+                    if (next.x < current.x) src.Rotation = Rotation.Rotate180;
+                    else if (next.y < current.y) src.Rotation = Rotation.Rotate270;
+                    else if (next.y > current.y) src.Rotation = Rotation.Rotate90;
+                    else src.Rotation = Rotation.Rotate0;
+                }
+
+
+                src.EndInit();
+
+                img.Source = src;
             }
         }
 
         void CreateMap() {
+
             int count = gameplay.mapSize * gameplay.mapSize, mapSize = gameplay.mapSize;
-            rects = new Rectangle[count];
+            //rects = new Rectangle[count];
+            images = new Image[count];
 
             for (int x = 0, y = 0, i = 0; y < mapSize; y++) {
                 x = 0;
                 while (x < mapSize) {
-                    // Rectangle rect = rects[i];
-                    Rectangle rect = new Rectangle();
-                    rects[i] = rect;
 
-                    rect.Width = cellSize;
-                    rect.Height = cellSize;
+                    //Rectangle rect = new Rectangle();
+                    //rects[i] = rect;
 
-                    canvas.Children.Insert(i, rect);
-                    Canvas.SetTop(rect, y * cellSize);
-                    Canvas.SetLeft(rect, x * cellSize);
+                    Image img = new Image();
+                    images[i] = img;
 
-                    rect.Fill = new SolidColorBrush(Colors.AliceBlue);
+                    img.Width = cellSize;
+                    img.Height = cellSize;
+
+                    canvas.Children.Insert(i, img);
+                    Canvas.SetTop(img, y * cellSize);
+                    Canvas.SetLeft(img, x * cellSize);
+
+                    
 
                     i++;
                     x++;
@@ -172,7 +240,7 @@ namespace SnakeLibrary {
         Random random = new Random();
         
         public int apples = 0;
-        bool isAlive = true, increaseSize = false;
+        public bool isAlive = true, increaseSize = false;
         public string direction = "up", nextDirection = "up";
         public int mapSize = 16;
         public Cell[,] cells;
@@ -221,7 +289,7 @@ namespace SnakeLibrary {
 
             for (int i = 0; i < oldBody.Length; i++)
                 bodyPositions[i] = new Position( oldBody[i].x, oldBody[i].y);
-            bodyPositions[bodyPositions.Length - 1] = new Position(position);
+            bodyPositions[bodyPositions.Length - 1] = new Position(bodyPositions[oldBody.Length-1]);
         }
 
         void SpawnSnake() {
