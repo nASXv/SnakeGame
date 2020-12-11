@@ -14,8 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using snakespace;
 using System.Timers;
-//using System.Threading;
-//using System.Drawing;
+
 namespace SnakeLibrary {
 
     public class Position {
@@ -44,7 +43,6 @@ namespace SnakeLibrary {
 
         }
     }   
-
    
     public class GameController {
         public ControllerGameplay gameplay;
@@ -64,7 +62,6 @@ namespace SnakeLibrary {
          void UpdateEvents(object source, EventArgs e) {
             gameplay.Update();
             graphics.Update();
-            if (debug != null) Debug();
 
             if (!gameplay.isAlive) GameOver();
         }
@@ -90,20 +87,14 @@ namespace SnakeLibrary {
             graphics = new ControllerGraphics(gameplay, canvas);
 
             LaunchTimers();
-            //gameplay.Start();
         }
     }
 
 
     public class ControllerGraphics {
         ControllerGameplay gameplay;
-        Rectangle[] rects;
         Image[] images;
         Canvas canvas;
-
-        Color Empty = Colors.Transparent;
-        Color Snake = Colors.Green;
-        Color Apple = Colors.Red;
 
         BitmapImage[] sprites; // 0 - bodyend, 1 - body, 2 - head, 3 - angle, 4 - apple 
         BitmapImage empty; 
@@ -202,16 +193,11 @@ namespace SnakeLibrary {
         void CreateMap() {
 
             int count = gameplay.mapSize * gameplay.mapSize, mapSize = gameplay.mapSize;
-            //rects = new Rectangle[count];
             images = new Image[count];
 
             for (int x = 0, y = 0, i = 0; y < mapSize; y++) {
                 x = 0;
                 while (x < mapSize) {
-
-                    //Rectangle rect = new Rectangle();
-                    //rects[i] = rect;
-
                     Image img = new Image();
                     images[i] = img;
 
@@ -222,12 +208,9 @@ namespace SnakeLibrary {
                     Canvas.SetTop(img, y * cellSize);
                     Canvas.SetLeft(img, x * cellSize);
 
-                    
-
                     i++;
                     x++;
 
-                    //Thread.Sleep(100);
                 }
             }
         }
@@ -275,7 +258,6 @@ namespace SnakeLibrary {
                 case Key.Down: if (direction != "up") nextDirection = "down";  break;
                 case Key.Left:  if (direction != "right") nextDirection = "left"; break;
                 case Key.Right:  if (direction != "left") nextDirection = "right"; break;
-                case Key.R: //restart
                     break;
             }
         }
@@ -299,7 +281,6 @@ namespace SnakeLibrary {
             bodyPositions = new Position[2];
             bodyPositions[0] = position;
             bodyPositions[1] = new Position( bodyPositions[0].x, bodyPositions[0].y + 1);
-            //bodyPositions[2] = new Position();
         }
 
         public void Update() {
@@ -358,7 +339,6 @@ namespace SnakeLibrary {
 
             bodyPositions[0] = position;
 
-            //move body
             for (int i = 1; i < bodyPositions.Length; i++) {
                 bodyPositions[i] = oldBody[i-1];
             }
