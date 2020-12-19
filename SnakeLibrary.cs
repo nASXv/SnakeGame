@@ -50,10 +50,14 @@ namespace SnakeLibrary {
         public Label debug;
         Canvas canvas;
         private System.Windows.Threading.DispatcherTimer gameTickTimer = new System.Windows.Threading.DispatcherTimer();
-        int gameStep = 10;
+        int gameStep = 8;
         Image img_go;
+        TextBlock score;
+
+        string scoreText = "SCORE: ", language = "en";
 
         void LaunchTimers() {
+            gameTickTimer.Tick -= UpdateEvents;
             gameTickTimer.Tick += UpdateEvents;
             gameTickTimer.Interval = new TimeSpan(gameStep * 100000);
             gameTickTimer.Start();
@@ -62,6 +66,7 @@ namespace SnakeLibrary {
          void UpdateEvents(object source, EventArgs e) {
             gameplay.Update();
             graphics.Update();
+            score.Text = scoreText + gameplay.apples;
 
             if (!gameplay.isAlive) GameOver();
         }
@@ -70,11 +75,21 @@ namespace SnakeLibrary {
             debug.Content = "Position: " + gameplay.position.x + "," + gameplay.position.y + "\nApples:  " + gameplay.apples+ "\nSize:  " + gameplay.bodyPositions.Length + "\n "+ 0 + " \n" + 0;
         }
 
-        public GameController(Canvas canvas, bool start = false, Label debugLabel = null, Image GameOver = null) {
+        public GameController(Canvas canvas, bool start = false, Label debugLabel = null, Image GameOver = null, TextBlock score = null, string language = "en") {
             this.canvas = canvas;
             if (start) Start();
             debug = debugLabel;
             img_go = GameOver;
+            this.score = score;
+            this.language = language;
+            if (language == "ru") scoreText = "СЧЁТ: ";
+
+            score.Text = scoreText + 0;
+        }
+
+        public void Play() {
+            score.Text = scoreText + 0;
+            Start();
         }
 
         void GameOver() {
@@ -136,7 +151,6 @@ namespace SnakeLibrary {
 
                 while (x < gameplay.mapSize) {
 
-                    //Rectangle rect = rects[i];
                     Image img = images[i];
                     switch (gameplay.cells[x, y].type) {
                         case Cell.Type.apple: src = sprites[4]; break;
@@ -258,7 +272,6 @@ namespace SnakeLibrary {
                 case Key.Down: if (direction != "up") nextDirection = "down";  break;
                 case Key.Left:  if (direction != "right") nextDirection = "left"; break;
                 case Key.Right:  if (direction != "left") nextDirection = "right"; break;
-                    break;
             }
         }
 
