@@ -18,18 +18,13 @@ using SnakeLibrary;
 namespace snakespace {
     public partial class MainWindow : Window {
         GameController gameController;
-
-        string language = "en";
-
         public MainWindow() {
             InitializeComponent();
         }
 
         void NewGame() {
             Clear();
-            if (gameController == null)
-                gameController = new GameController(GameCanvas, true, Text_Length, img_GameOver, ScoreText, language);
-            else gameController.Play();
+            gameController = new GameController(GameCanvas, true, Text_Length, img_GameOver);
         }
 
         void Clear() {
@@ -39,22 +34,10 @@ namespace snakespace {
         
         private void Button_Click(object sender, RoutedEventArgs e) {
             NewGame();
-
-            btn_play_image.Source = new BitmapImage(new Uri(@"pack://application:,,/Resources/Restart.png"));
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e) {
             gameController.gameplay.KeyPressed(sender, e);
-        }
-
-        private void button_ru_Click(object sender, RoutedEventArgs e) {
-            CanvasLanguage.Visibility = Visibility.Hidden;
-            language = "ru";
-            ScoreText.Text = "СЧЁТ: 0";
-        }
-
-        private void button_en_Click(object sender, RoutedEventArgs e) {
-            CanvasLanguage.Visibility = Visibility.Hidden;
         }
     }
 
