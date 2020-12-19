@@ -1,7 +1,0 @@
-C:\Users\user\source\repos\zmeyka1\SnakeLibrary\bin\Debug\netstandard2.0\SnakeLibrary.deps.json
-C:\Users\user\source\repos\zmeyka1\SnakeLibrary\bin\Debug\netstandard2.0\SnakeLibrary.dll
-C:\Users\user\source\repos\zmeyka1\SnakeLibrary\bin\Debug\netstandard2.0\SnakeLibrary.pdb
-C:\Users\user\source\repos\zmeyka1\SnakeLibrary\obj\Debug\netstandard2.0\SnakeLibrary.AssemblyInfoInputs.cache
-C:\Users\user\source\repos\zmeyka1\SnakeLibrary\obj\Debug\netstandard2.0\SnakeLibrary.AssemblyInfo.cs
-C:\Users\user\source\repos\zmeyka1\SnakeLibrary\obj\Debug\netstandard2.0\SnakeLibrary.dll
-C:\Users\user\source\repos\zmeyka1\SnakeLibrary\obj\Debug\netstandard2.0\SnakeLibrary.pdb
