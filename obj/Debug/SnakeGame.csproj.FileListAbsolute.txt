@@ -1,0 +1,16 @@
+C:\Users\user\source\repos\SnakeGame\bin\Debug\zmeyka1.exe.config
+C:\Users\user\source\repos\SnakeGame\bin\Debug\zmeyka1.exe
+C:\Users\user\source\repos\SnakeGame\bin\Debug\zmeyka1.pdb
+C:\Users\user\source\repos\SnakeGame\obj\Debug\SnakeGame.csprojAssemblyReference.cache
+C:\Users\user\source\repos\SnakeGame\obj\Debug\MainWindow.g.cs
+C:\Users\user\source\repos\SnakeGame\obj\Debug\App.g.cs
+C:\Users\user\source\repos\SnakeGame\obj\Debug\zmeyka1_Content.g.cs
+C:\Users\user\source\repos\SnakeGame\obj\Debug\zmeyka1_MarkupCompile.cache
+C:\Users\user\source\repos\SnakeGame\obj\Debug\zmeyka1_MarkupCompile.lref
+C:\Users\user\source\repos\SnakeGame\obj\Debug\MainWindow.baml
+C:\Users\user\source\repos\SnakeGame\obj\Debug\zmeyka1.g.resources
+C:\Users\user\source\repos\SnakeGame\obj\Debug\zmeyka1.Properties.Resources.resources
+C:\Users\user\source\repos\SnakeGame\obj\Debug\SnakeGame.csproj.GenerateResource.cache
+C:\Users\user\source\repos\SnakeGame\obj\Debug\zmeyka1.exe
+C:\Users\user\source\repos\SnakeGame\obj\Debug\zmeyka1.pdb
+C:\Users\user\source\repos\SnakeGame\obj\Debug\App.baml

@@ -1,0 +1,15 @@
+C:\Users\user\source\repos\zmeyka1\obj\Debug\zmeyka1.csprojAssemblyReference.cache
+C:\Users\user\source\repos\zmeyka1\obj\Debug\MainWindow.g.cs
+C:\Users\user\source\repos\zmeyka1\obj\Debug\App.g.cs
+C:\Users\user\source\repos\zmeyka1\obj\Debug\zmeyka1_Content.g.cs
+C:\Users\user\source\repos\zmeyka1\obj\Debug\zmeyka1_MarkupCompile.cache
+C:\Users\user\source\repos\zmeyka1\obj\Debug\zmeyka1_MarkupCompile.lref
+C:\Users\user\source\repos\zmeyka1\bin\Debug\zmeyka1.exe.config
+C:\Users\user\source\repos\zmeyka1\bin\Debug\zmeyka1.exe
+C:\Users\user\source\repos\zmeyka1\bin\Debug\zmeyka1.pdb
+C:\Users\user\source\repos\zmeyka1\obj\Debug\MainWindow.baml
+C:\Users\user\source\repos\zmeyka1\obj\Debug\zmeyka1.g.resources
+C:\Users\user\source\repos\zmeyka1\obj\Debug\zmeyka1.Properties.Resources.resources
+C:\Users\user\source\repos\zmeyka1\obj\Debug\zmeyka1.csproj.GenerateResource.cache
+C:\Users\user\source\repos\zmeyka1\obj\Debug\zmeyka1.exe
+C:\Users\user\source\repos\zmeyka1\obj\Debug\zmeyka1.pdb
