@@ -56,7 +56,7 @@ namespace SnakeLibrary {
 
         string scoreText = "SCORE: ", language = "en";
 
-        void LaunchTimers() {
+        void StartUpdate() {
             gameTickTimer.Tick -= UpdateEvents;
             gameTickTimer.Tick += UpdateEvents;
             gameTickTimer.Interval = new TimeSpan(gameStep * 100000);
@@ -68,7 +68,7 @@ namespace SnakeLibrary {
             graphics.Update();
             score.Text = scoreText + gameplay.apples;
 
-            if (!gameplay.isAlive) GameOver();
+            if (!gameplay.life) GameOver();
         }
 
         void Debug() {
@@ -101,7 +101,7 @@ namespace SnakeLibrary {
             gameplay = new ControllerGameplay(true);
             graphics = new ControllerGraphics(gameplay, canvas);
 
-            LaunchTimers();
+            StartUpdate();
         }
     }
 
@@ -237,14 +237,14 @@ namespace SnakeLibrary {
         Random random = new Random();
         
         public int apples = 0;
-        public bool isAlive = true, increaseSize = false;
+        public bool life = true, increaseSize = false;
         public string direction = "up", nextDirection = "up";
         public int mapSize = 16;
         public Cell[,] cells;
 
 
         void Die() {
-            isAlive = false;
+            life         = false;
         }
 
         void SpawnApple() {
@@ -288,7 +288,7 @@ namespace SnakeLibrary {
         }
 
         void SpawnSnake() {
-            isAlive = true;
+            life = true;
             position = new Position(random.Next(0, mapSize - 1), random.Next(0, mapSize - 1));
 
             bodyPositions = new Position[2];
@@ -297,7 +297,7 @@ namespace SnakeLibrary {
         }
 
         public void Update() {
-            if (isAlive) {
+            if (life) {
                 CheckBorder();
                 Move();
                 CheckObstacle();
