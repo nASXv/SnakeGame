@@ -34,6 +34,7 @@ namespace snakespace {
 
         void Clear() {
             img_GameOver.Opacity = 0;
+            txt_Start.Opacity = 0;
             GameCanvas.Children.Clear();
         }
         
@@ -51,6 +52,7 @@ namespace snakespace {
             CanvasLanguage.Visibility = Visibility.Hidden;
             language = "ru";
             ScoreText.Text = "СЧЁТ: 0";
+            txt_Start.Content = "Нажмите кнопку для старта";
         }
 
         private void button_en_Click(object sender, RoutedEventArgs e) {
