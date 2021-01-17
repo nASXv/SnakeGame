@@ -16,7 +16,7 @@
             <ColumnDefinition Width="0*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button BorderBrush="White" Width="100" Name="btn_play" Height="100" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="170,0,181,30" Click="Button_Click" Background="White" Grid.Column="1">
+        <Button BorderBrush="White" Width="100" Name="btn_play" Height="100" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="53,0,298,32" Click="Button_Click" Background="White" Grid.Column="1">
             <StackPanel Orientation="Horizontal">
                 <Image x:Name="btn_play_image" Source="{StaticResource img_Play}" Stretch="Uniform" Width="95" Height="94"/>
 
@@ -34,11 +34,12 @@
 
 
 
-        <Canvas Visibility="Visible" Background="White"  HorizontalAlignment="Left" Height="616" VerticalAlignment="Top" Width="451" Grid.ColumnSpan="2" Name ="CanvasLanguage" >
+        <Canvas Visibility="Hidden" Background="White"  HorizontalAlignment="Left" Height="616" VerticalAlignment="Top" Width="451" Grid.ColumnSpan="2" Name ="CanvasLanguage" >
             <Label Content="Choose Language/&#xD;&#xA; Выберите язык" Canvas.Left="49" Canvas.Top="60" FontSize="40" FontWeight="Bold" FontStyle="Italic" Height="118"/>
             <Button Content="Русский" Canvas.Left="135" Canvas.Top="240" Width="184" Height="40" Name="button_ru" FontSize="25" FontWeight="Bold" Click="button_ru_Click"/>
             <Button Content="English" Canvas.Left="135" Canvas.Top="300" Width="184" Height="40" Name="button_en" FontSize="25" FontWeight="Bold" Click="button_en_Click"/>
 
         </Canvas>
+        <Button Grid.ColumnSpan="2" FontSize="30" Content="Выход" HorizontalAlignment="Left" Margin="215,497,0,0" VerticalAlignment="Top" Width="180" Height="78" Click="Button_Exit"/>
     </Grid>
 </Window>

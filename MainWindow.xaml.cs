@@ -58,6 +58,11 @@ namespace snakespace {
         private void button_en_Click(object sender, RoutedEventArgs e) {
             CanvasLanguage.Visibility = Visibility.Hidden;
         }
+
+        private void Button_Exit(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
     }
 
     
