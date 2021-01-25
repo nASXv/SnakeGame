@@ -45,7 +45,11 @@ namespace snakespace {
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e) {
-            gameController.gameplay.KeyPressed(sender, e);
+            try
+            {
+                gameController.gameplay.KeyPressed(sender, e);
+            }
+            catch { }
         }
 
         private void button_ru_Click(object sender, RoutedEventArgs e) {
@@ -53,6 +57,7 @@ namespace snakespace {
             language = "ru";
             ScoreText.Text = "СЧЁТ: 0";
             txt_Start.Content = "Нажмите кнопку для старта";
+            btn_Exit.Content = "Выход";
         }
 
         private void button_en_Click(object sender, RoutedEventArgs e) {

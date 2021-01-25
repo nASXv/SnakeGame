@@ -54,7 +54,7 @@ namespace SnakeLibrary {
         Image img_go;
         TextBlock score;
 
-        string scoreText = "SCORE: ", language = "en";
+        public string scoreText = "SCORE: ", language = "en";
 
         void StartUpdate() {
             gameTickTimer.Tick -= UpdateEvents;
@@ -244,7 +244,7 @@ namespace SnakeLibrary {
 
 
         void Die() {
-            life         = false;
+            life = false;
         }
 
         void SpawnApple() {
